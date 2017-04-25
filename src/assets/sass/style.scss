@@ -1,0 +1,49 @@
+$primary: #c79595;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font: 400 1em/1.5 Helvetica, Arial, sans-serif;
+  color: #000;
+  background-color: $primary;
+}
+
+img {
+  vertical-align: top;
+}
+
+.wrapper {
+  min-height: 100vh;
+}
+
+.svg-store {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.svg-icon {
+  display: inline-block;
+  vertical-align: top;
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+}
+
+.icon-gas-mask {
+  height: .885em;
+  font-size: 150px;
+  color: #351232;
+}
+
+.icon-bomb {
+  display: inline-block;
+  vertical-align: middle;
+  width: 138px;
+  height: 150px;
+  background: url("../img/bomb.svg") no-repeat 0 0 / 100% 100%;
+}
