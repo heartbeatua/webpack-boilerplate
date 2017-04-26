@@ -22,11 +22,6 @@ $ npm run dev
 
 - `npm run build`: Production ready build.
   - JavaScript and CSS minified, also compiled with version hashes for efficient long-term caching.
-  
-## Чего в сборке пока нет
-
-- Stylelint;
-- Browser-sync.
 
 ## Статьи к прочтению
 - [ES6 cheatsheet](https://github.com/DrkSephy/es6-cheatsheet) — собрано много часто встречающихся жизненных ситуаций которые можно легче решать с помощью ES6
