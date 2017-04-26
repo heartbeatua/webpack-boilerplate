@@ -1,11 +1,12 @@
 var webpack = require('webpack');
 var path = require('path');
 
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var CleanWebpackPlugin = require('clean-webpack-plugin');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var SvgStore = require('webpack-svgstore-plugin');
-var CopyWebpackPlugin = require('copy-webpack-plugin');
+var ExtractTextPlugin   = require('extract-text-webpack-plugin'),
+    CleanWebpackPlugin  = require('clean-webpack-plugin'),
+    HtmlWebpackPlugin   = require('html-webpack-plugin'),
+    SvgStore            = require('webpack-svgstore-plugin'),
+    CopyWebpackPlugin   = require('copy-webpack-plugin'),
+    StyleLintPlugin     = require('stylelint-webpack-plugin');
 
 var isProd = process.env.NODE_ENV === 'production';
 var hash = isProd ? '.[hash:5]' : '';
@@ -62,6 +63,14 @@ module.exports = {
   },
 
   plugins: [
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery',
+      'window.jQuery/': 'jquery'
+    }),
+    new StyleLintPlugin({
+      syntax: 'scss'
+    }),
     new ExtractTextPlugin({
       filename: 'css/style' + hash + '.css',
       disable: !isProd
