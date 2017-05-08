@@ -1,29 +1,32 @@
-var webpack = require('webpack');
-var path = require('path');
+const webpack = require("webpack")
+const path = require("path")
 
-var ExtractTextPlugin   = require('extract-text-webpack-plugin'),
-    CleanWebpackPlugin  = require('clean-webpack-plugin'),
-    HtmlWebpackPlugin   = require('html-webpack-plugin'),
-    SvgStore            = require('webpack-svgstore-plugin'),
-    CopyWebpackPlugin   = require('copy-webpack-plugin'),
-    StyleLintPlugin     = require('stylelint-webpack-plugin');
+const ExtractTextPlugin = require("extract-text-webpack-plugin")
+const CleanWebpackPlugin = require("clean-webpack-plugin")
+const HtmlWebpackPlugin = require("html-webpack-plugin")
+const SvgStore = require("webpack-svgstore-plugin")
+const CopyWebpackPlugin = require("copy-webpack-plugin")
+const StyleLintPlugin = require("stylelint-webpack-plugin")
 
-var isProd = process.env.NODE_ENV === 'production';
-var hash = isProd ? '.[hash:5]' : '';
+const UglifyJsPlugin = webpack.optimize.UglifyJsPlugin
 
-module.exports = {
+const dev = process.env.NODE_ENV !== "production"
 
+const hash = dev === false ? ".[hash:5]" : ""
+const imgHash = dev ? "?[hash:5]" : ""
+
+const config = {
   entry: {
     app: [
-      './src/main.js',
-      './src/assets/sass/style.scss'
+      "./src/main.js",
+      "./src/assets/sass/style.scss"
     ]
   },
 
   output: {
-    path: path.resolve(__dirname, './dist'),
-    filename: 'js/[name]' + hash + '.js',
-    publicPath: '/'
+    path: path.resolve(__dirname, "./dist"),
+    filename: `js/[name]${hash}.js`,
+    publicPath: "/"
   },
 
   module: {
@@ -32,88 +35,89 @@ module.exports = {
         test: /\.s[ac]ss$/,
         use: ExtractTextPlugin.extract({
           use: [{
-            loader: 'css-loader',
+            loader: "css-loader",
             options: {
-              sourceMap: !isProd
+              sourceMap: dev
             }
           }, {
-            loader: 'postcss-loader'
+            loader: "postcss-loader"
           }, {
-            loader: 'sass-loader',
+            loader: "sass-loader",
             options: {
-              sourceMap: !isProd
+              sourceMap: dev
             }
           }],
-          fallback: 'style-loader'
+          fallback: "style-loader"
         })
       },
       {
         test: /\.(png|jpg|svg|gif)$/,
-        loader: 'file-loader',
+        loader: "file-loader",
         options: {
-          name: 'img/[name]' + hash + '.[ext]' + (!isProd ? '?[hash:5]' : '')
+          name: `img/[name]${hash}.[ext]${imgHash}`
         }
       },
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'babel-loader'
+        loader: "babel-loader"
       }
     ]
   },
 
   plugins: [
     new webpack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery',
-      'window.jQuery': 'jquery'
+      $: "jquery",
+      jQuery: "jquery",
+      "window.jQuery": "jquery"
     }),
     new StyleLintPlugin({
-      syntax: 'scss'
+      syntax: "scss"
     }),
     new ExtractTextPlugin({
-      filename: 'css/style' + hash + '.css',
-      disable: !isProd
+      filename: `css/style${hash}.css`,
+      disable: dev
     }),
     new webpack.LoaderOptionsPlugin({
-      minimize: isProd
+      minimize: !dev
     }),
     new HtmlWebpackPlugin({
-      template: './index.html'
+      template: "./index.html"
     }),
-    new CleanWebpackPlugin(['dist'], {
+    new CleanWebpackPlugin(["dist"], {
       root: __dirname,
       verbose: true,
       dry: false
     }),
     new SvgStore({
       svg: {
-        style: '',
-        class: 'svg-store'
+        style: "",
+        class: "svg-store"
       },
       svgoOptions: {
         plugins: [{
           removeAttrs: {
-            attrs: ['fill']
+            attrs: ["fill"]
           }
         }]
       },
-      prefix: 'icon-'
+      prefix: "icon-"
     }),
     new CopyWebpackPlugin([{
-      from: './src/assets/img',
-      to: './img'
+      from: "./src/assets/img",
+      to: "./img"
     }])
   ],
 
-  devtool: !isProd ? 'source-map' : false,
+  devtool: dev ? "source-map" : false,
 
   devServer: {
     contentBase: __dirname
   }
-
-};
-
-if (isProd) {
-  module.exports.plugins.push(new webpack.optimize.UglifyJsPlugin());
 }
+
+if (dev === false) {
+  config.plugins.push(new UglifyJsPlugin())
+}
+
+module.exports = config
